@@ -2,7 +2,7 @@
 from rest_framework import serializers
 from apps.accounts.models import User
 from django.contrib.auth import authenticate
-
+from apps.families.models import FamilyMembership
 class RegisterSerializer(serializers.ModelSerializer):
     password=serializers.CharField(
         write_only=True,
@@ -54,6 +54,9 @@ class LoginSerializer(serializers.Serializer):
 
 class UserSerializer(serializers.ModelSerializer):
 
+    has_family = serializers.SerializerMethodField()
+    family = serializers.SerializerMethodField()
+
     class Meta:
         model = User
 
@@ -63,4 +66,46 @@ class UserSerializer(serializers.ModelSerializer):
             "full_name",
             "phone",
             "created_at",
+            "has_family",
+            "family",
         )
+    def get_has_family(self, obj):
+        return FamilyMembership.objects.filter(user=obj).exists()
+
+    def get_family(self, obj):
+
+        # membership = (
+        #     FamilyMembership.objects
+        #     .select_related("family")
+        #     .filter(user=obj)
+        #     .first()
+        # )
+
+        # if membership is None:
+        #     return None
+
+        # return {
+        #     "id": membership.family.id,
+        #     "name": membership.family.name,
+        #     "role": membership.role,
+        # }
+        membership = (
+            FamilyMembership.objects
+            .select_related("family")
+            .filter(user=obj)
+            .first()
+        )
+
+        if membership is None:
+            return None
+
+        data = {
+            "id": membership.family.id,
+            "name": membership.family.name,
+            "role": membership.role,
+        }
+
+        if membership.role == FamilyMembership.Role.OWNER:
+            data["invite_code"] = membership.family.invite_code
+
+        return data

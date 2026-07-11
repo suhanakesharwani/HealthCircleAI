@@ -26,17 +26,19 @@ class MedicalReport(models.Model):
 
     family_member=models.ForeignKey(
         FamilyMember,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="medical_reports",
     )
 
 
     uploaded_by=models.ForeignKey(
         User,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="uploaded_reports",
     )
 
 
-    file_url=models.URLField()
+    file_path=models.CharField(max_length=500)
 
 
     file_type=models.CharField(
@@ -56,10 +58,10 @@ class MedicalReport(models.Model):
     )
 
 
-    ocr_text=models.TextField(
-        null=True,
-        blank=True
-    )
+    # ocr_text=models.TextField(
+    #     null=True,
+    #     blank=True
+    # )
 
 
     ocr_status=models.CharField(
@@ -80,33 +82,42 @@ class MedicalReport(models.Model):
         auto_now_add=True
     )
 
+class OCRResult(models.Model):
 
+    report = models.OneToOneField(
+        MedicalReport,
+        on_delete=models.CASCADE,
+        related_name="ocr_result",
+    )
+
+    extracted_text = models.TextField()
+
+    engine = models.CharField(
+        max_length=100,
+        default="Gemini OCR",
+    )
+
+    processed_at = models.DateTimeField(
+        auto_now=True,
+    )
 class AISummary(models.Model):
 
-    report=models.OneToOneField(
+    report = models.OneToOneField(
         MedicalReport,
-        on_delete=models.CASCADE
+        on_delete=models.CASCADE,
+        related_name="ai_summary",
     )
 
+    summary_text = models.TextField()
 
-    summary_text=models.TextField()
+    key_findings = models.JSONField(default=list)
 
+    abnormal_values = models.JSONField(default=list)
 
-    key_findings=models.JSONField(
-        default=list
-    )
+    recommendations = models.JSONField(default=list)
 
+    model_version = models.CharField(max_length=100)
 
-    abnormal_values=models.JSONField(
-        default=list
-    )
-
-
-    model_version=models.CharField(
-        max_length=100
-    )
-
-
-    generated_at=models.DateTimeField(
+    generated_at = models.DateTimeField(
         auto_now_add=True
     )

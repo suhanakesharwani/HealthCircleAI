@@ -43,9 +43,9 @@ class Family(models.Model):
 class FamilyMembership(models.Model):
 
     class Role(models.TextChoices):
-        ADMIN = "ADMIN"
+        OWNER = "OWNER"
         CAREGIVER = "CAREGIVER"
-        VIEWER = "VIEWER"
+        MEMBER = "MEMBER"
 
 
     id = models.UUIDField(

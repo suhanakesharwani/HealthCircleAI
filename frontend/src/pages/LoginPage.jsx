@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../api/auth";
+import { getCurrentUser } from "../api/user";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -28,9 +29,20 @@ function LoginPage() {
         setError("");
 
         try {
-            await login(formData);
+           await login(formData);
 
-            navigate("/dashboard");
+            const user = await getCurrentUser();
+
+            if(user.has_family){
+
+                navigate("/dashboard");
+
+            }
+            else{
+
+                navigate("/family/setup");
+
+            }
         } catch (err) {
             console.log(err);
 

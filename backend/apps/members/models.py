@@ -4,6 +4,7 @@ from apps.families.models import Family
 import uuid
 from django.contrib.postgres.fields import ArrayField
 # Create your models here.
+from django.conf import settings
 
 class FamilyMember(models.Model):
 
@@ -57,10 +58,22 @@ class FamilyMember(models.Model):
         blank=True
     )
 
+    blood_group=models.TextField(
+        null=True,
+        blank=True
+    )
 
     notes = models.TextField(
         null=True,
         blank=True
+    )
+
+    linked_user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="health_profile",
     )
 
 
@@ -78,3 +91,4 @@ class FamilyMember(models.Model):
     updated_at = models.DateTimeField(
         auto_now=True
     )
+
