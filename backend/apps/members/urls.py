@@ -8,17 +8,32 @@ from .views import (
 
 urlpatterns = [
 
+#changed
+    # path(
+    #     "families/<uuid:family_id>/family-members/",
+    #     FamilyMemberListCreateView.as_view(),
+    # ),
+
+    # path(
+    #     "family-members/<uuid:pk>/",
+    #     FamilyMemberDetailView.as_view(),
+    # ),
+    # path(
+    #     "family-members/me/",
+    #     MyProfileView.as_view(),
+    # ),
+
     path(
-        "families/<uuid:family_id>/family-members/",
+        "families/<uuid:family_id>/members/",
         FamilyMemberListCreateView.as_view(),
     ),
 
     path(
-        "family-members/<uuid:pk>/",
+        "members/<uuid:pk>/",
         FamilyMemberDetailView.as_view(),
     ),
     path(
-        "family-members/me/",
+        "members/me/",
         MyProfileView.as_view(),
     ),
 

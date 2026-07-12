@@ -46,3 +46,13 @@ class AISummarySerializer(serializers.ModelSerializer):
         model = AISummary
 
         fields = "__all__"
+
+    
+class ReportUploadSerializer(serializers.Serializer):
+
+    file = serializers.FileField()
+
+    report_date = serializers.DateField(
+        required=False,
+        allow_null=True,
+    )

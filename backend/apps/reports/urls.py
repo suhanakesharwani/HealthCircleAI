@@ -4,6 +4,7 @@ from .views import (
     ReportListCreateView,
     ReportDetailView,
     ReportSummaryView,
+    ReportPreviewView,
 )
 
 urlpatterns = [
@@ -21,6 +22,10 @@ urlpatterns = [
     path(
         "reports/<uuid:report_id>/summary/",
         ReportSummaryView.as_view(),
+    ),
+    path(
+        "reports/<uuid:report_id>/preview/",
+        ReportPreviewView.as_view(),
     ),
 
 ]

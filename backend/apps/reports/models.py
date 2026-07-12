@@ -118,6 +118,10 @@ class AISummary(models.Model):
 
     model_version = models.CharField(max_length=100)
 
+    structured_report = models.JSONField(
+        default=dict,
+    )
+
     generated_at = models.DateTimeField(
         auto_now_add=True
     )
