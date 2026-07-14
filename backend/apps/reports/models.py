@@ -51,6 +51,13 @@ class MedicalReport(models.Model):
         max_length=255
     )
 
+    report_type = models.CharField(
+        max_length=50,
+        blank=True,
+        db_index=True,
+        default="Other",
+    )
+
 
     report_date=models.DateField(
         null=True,
@@ -122,6 +129,58 @@ class AISummary(models.Model):
         default=dict,
     )
 
+    model_version=models.CharField(
+        max_length=100,
+        blank=True
+    )
+
     generated_at = models.DateTimeField(
         auto_now_add=True
     )
+
+
+class ReportTest(models.Model):
+
+    report = models.ForeignKey(
+        MedicalReport,
+        on_delete=models.CASCADE,
+        related_name="tests"
+    )
+
+    name = models.CharField(
+        max_length=200
+    )
+
+    normalized_name = models.CharField(
+        max_length=100,
+        db_index=True
+    )
+
+    value = models.FloatField(
+        null=True,
+        blank=True
+    )
+
+    unit = models.CharField(
+        max_length=50,
+        blank=True
+    )
+
+    reference_range = models.CharField(
+        max_length=100,
+        blank=True,
+        default=""
+    )
+
+    status = models.CharField(
+        max_length=20,
+        blank=True
+    )
+
+    class Meta:
+
+        ordering = ["name"]
+
+    def __str__(self):
+
+        return f"{self.name} ({self.value})"

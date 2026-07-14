@@ -65,7 +65,8 @@ function MemberCard({ member }) {
 
         <Link
 
-            to={`/family-members/${member.id}`}
+            // to={`/family-members/${member.id}`} changed
+            to={`/members/${member.id}`}
 
             style={{
                 textDecoration: "none",

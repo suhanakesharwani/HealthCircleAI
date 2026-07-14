@@ -5,6 +5,8 @@ from .views import (
     ReportDetailView,
     ReportSummaryView,
     ReportPreviewView,
+    ReportTrendView,
+    
 )
 
 urlpatterns = [
@@ -27,5 +29,11 @@ urlpatterns = [
         "reports/<uuid:report_id>/preview/",
         ReportPreviewView.as_view(),
     ),
+    path(
 
+        "members/<uuid:member_id>/report-trends/",
+
+        ReportTrendView.as_view(),
+
+    ),
 ]

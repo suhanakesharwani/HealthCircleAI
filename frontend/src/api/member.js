@@ -85,7 +85,8 @@ import axiosClient from "./axiosClient";
 export const getFamilyMembers = async (familyId) => {
 
     const response = await axiosClient.get(
-        `families/${familyId}/family-members/`
+        // `families/${familyId}/family-members/` changed
+        `families/${familyId}/members/`
     );
 
     return response.data;
@@ -97,7 +98,8 @@ export const createFamilyMember = async (
 ) => {
 
     const response = await axiosClient.post(
-        `families/${familyId}/family-members/`,
+        // `families/${familyId}/family-members/`, changed
+        `families/${familyId}/members/`,
         data
     );
 
@@ -107,7 +109,10 @@ export const createFamilyMember = async (
 export const getFamilyMember = async (id) => {
 
     const response = await axiosClient.get(
-        `family-members/${id}/`
+        //changed
+        // `family-members/${id}/`
+        `members/${id}/`
+
     );
 
     return response.data;
@@ -116,7 +121,8 @@ export const getFamilyMember = async (id) => {
 export const getMyProfile = async () => {
 
     const response = await axiosClient.get(
-        "family-members/me/"
+        //changed
+        "members/me/"
     );
 
     return response.data;
@@ -127,7 +133,8 @@ export const updateMyProfile = async (
 ) => {
 
     const response = await axiosClient.patch(
-        "family-members/me/",
+        "members/me/",
+        // "family-members/me/", changed
         data
     );
 
@@ -140,7 +147,8 @@ export const updateFamilyMember = async (
 ) => {
 
     const response = await axiosClient.patch(
-        `family-members/${id}/`,
+        // `family-members/${id}/`, changed
+        `members/${id}/`,
         data
     );
 
@@ -152,6 +160,7 @@ export const deleteFamilyMember = async (
 ) => {
 
     await axiosClient.delete(
-        `family-members/${id}/`
+        // `family-members/${id}/` changed
+        `members/${id}/`
     );
 };

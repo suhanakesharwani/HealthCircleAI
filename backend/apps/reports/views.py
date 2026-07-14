@@ -1,6 +1,6 @@
 from django.shortcuts import get_object_or_404
 
-from apps.reports.tasks import process_report_ocr
+from .tasks import process_report_ocr
 from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
@@ -25,6 +25,18 @@ from .permissions import (
     can_access_member,
     can_upload_report,
 )
+
+
+from collections import defaultdict
+
+from .models import (
+    MedicalReport,
+    AISummary,
+    ReportTest,
+)
+from .trends import compare_reports
+from .history_analysis import analyze_history
+
 
 
 class ReportListCreateView(APIView):
@@ -126,7 +138,7 @@ class ReportListCreateView(APIView):
             report_date=report_date,
 
         )
-        process_report_ocr(str(report.id))
+        process_report_ocr.delay(str(report.id))
         serializer = MedicalReportSerializer(report)
 
         return Response(
@@ -249,4 +261,58 @@ class ReportPreviewView(APIView):
 
         return Response({
             "url": signed_url,
+        })
+class ReportTrendView(APIView):
+
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, member_id):
+
+        member = get_object_or_404(FamilyMember, pk=member_id)
+
+        if not can_access_member(request.user, member):
+            return Response({"detail": "Permission denied"}, status=403)
+
+        report_type = request.GET.get("report_type")
+
+        reports = MedicalReport.objects.filter(
+            family_member=member,
+            ai_status=MedicalReport.Status.DONE,
+        )
+
+        if report_type:
+            reports = reports.filter(report_type=report_type)
+
+        reports = reports.order_by("report_date", "uploaded_at")
+
+        charts = defaultdict(list)
+
+        for report in reports:
+            try:
+                summary = report.ai_summary
+            except AISummary.DoesNotExist:
+                continue
+
+            tests = ReportTest.objects.filter(report=report)
+
+            for test in tests:
+                charts[test.normalized_name].append({
+                    "report_id": str(report.id),
+                    "date": report.report_date,
+                    "value": test.value,
+                    "status": test.status,
+                    "unit": test.unit,
+                    "reference_range": test.reference_range,
+                    "original_name": test.name
+                })
+
+        history = analyze_history(charts)
+        analysis = compare_reports(member, report_type)
+
+        return Response({
+            "member": member.id,
+            "report_type": report_type,
+            "charts": charts,
+            "history": history,
+            **analysis
         })

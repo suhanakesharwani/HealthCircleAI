@@ -1,13 +1,24 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-
+import ReportTrendsSection from "../components/ReportTrendsSection";
 import { getFamilyMember } from "../api/member";
+import { getReports } from "../api/report";
+
+import UploadReportModal from "../components/UploadReportModal";
+
+import ReportCard from "../components/ReportCard";
+
+
 
 function FamilyMemberProfilePage() {
 
+    
+
     const { id } = useParams();
 
-    const [member, setMember] = useState(null);
+    const [member, setMember] = useState();
+
+    const[reports,setReports]=useState([]);
 
     useEffect(() => {
 
@@ -17,11 +28,26 @@ function FamilyMemberProfilePage() {
 
     async function loadMember() {
 
-        const data = await getFamilyMember(id);
+        try {
 
-        setMember(data);
+            const data = await getFamilyMember(id);
 
-    }
+            setMember(data);
+
+            const reportData =
+                await getReports(id);
+
+            setReports(reportData);
+
+        }
+
+        catch (err) {
+
+            console.error(err);
+
+        }
+
+        }
 
     if (!member) {
 
@@ -188,6 +214,62 @@ function FamilyMemberProfilePage() {
 
             </h2>
 
+            <ReportTrendsSection memberId={member.id} />
+
+            <hr />
+
+            <h2>
+
+                Medical Reports
+
+            </h2>
+
+            {
+                member.permissions.can_upload_reports && (
+
+                    <UploadReportModal
+
+                        memberId={member.id}
+
+                        onUploaded={loadMember}
+
+                    />
+
+                )
+            }
+
+            {
+                reports.length === 0
+
+                ?
+
+                <p>
+
+                    No reports uploaded yet.
+
+                </p>
+
+                :
+
+                reports.map(report => (
+
+                    <ReportCard
+
+                        key={report.id}
+
+                        report={report}
+
+                        refresh={loadMember}
+
+                        canDelete={
+                            member.permissions.can_upload_reports
+                        }
+
+                    />
+
+                ))
+            }
+
             <div
                 style={{
                     display: "flex",
@@ -199,7 +281,8 @@ function FamilyMemberProfilePage() {
                 {member.permissions.can_edit && (
 
                     <Link
-                        to={`/family-members/${member.id}/edit`}
+                        // to={`/family-members/${member.id}/edit`} changed
+                        to={`/members/${member.id}/edit`}
                     >
 
                         <button>
@@ -212,42 +295,14 @@ function FamilyMemberProfilePage() {
 
                 )}
 
-                {member.permissions.can_upload_reports && (
-
-                    <Link
-                        to={`/family-members/${member.id}/reports/upload`}
-                    >
-
-                        <button>
-
-                            Upload Medical Report
-
-                        </button>
-
-                    </Link>
-
-                )}
-
-                {member.permissions.can_view_reports && (
-
-                    <Link
-                        to={`/family-members/${member.id}/reports`}
-                    >
-
-                        <button>
-
-                            View Reports
-
-                        </button>
-
-                    </Link>
-
-                )}
+               
+                
 
                 {member.permissions.can_manage_medicines && (
 
                     <Link
-                        to={`/family-members/${member.id}/medicines`}
+                        // to={`/family-members/${member.id}/medicines`} changed
+                         to={`/members/${member.id}/medicines`}
                     >
 
                         <button>
@@ -263,7 +318,8 @@ function FamilyMemberProfilePage() {
                 {member.permissions.can_manage_habits && (
 
                     <Link
-                        to={`/family-members/${member.id}/habits`}
+                        // to={`/family-members/${member.id}/habits`} changed
+                        to={`/members/${member.id}/habits`}
                     >
 
                         <button>

@@ -134,7 +134,9 @@ function EditFamilyMemberPage() {
 
             alert("Profile updated successfully.");
 
-            navigate(`/family-members/${id}`);
+            // navigate(`/family-members/${id}`); chnaged
+            
+            navigate(`/members/${id}`);
 
         }
 

@@ -137,7 +137,9 @@ function AppRouter() {
                 }
             />
             <Route
-                path="/family-members/:id"
+            // chnaged
+
+                path="/members/:id"
                 element={
                     <ProtectedRoute>
                         <FamilyMemberProfilePage />
@@ -146,7 +148,8 @@ function AppRouter() {
             />
 
             <Route
-                path="/family-members/:id/edit"
+            // changed
+                path="/members/:id/edit"
                 element={
                     <ProtectedRoute>
                         <EditFamilyMemberPage />
