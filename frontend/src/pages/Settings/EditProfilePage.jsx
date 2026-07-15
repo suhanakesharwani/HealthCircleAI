@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getCurrentUser } from "../api/auth";
+import { getCurrentUser } from "../../api/auth";
 import {
     getFamilyMembers,
     updateFamilyMember,
-} from "../api/member";
+} from "../../api/member";
 
 function EditProfilePage() {
 

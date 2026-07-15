@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser } from "../api/user";
+import { getCurrentUser } from "../../api/user";
 
 function AuthLoadingPage() {
     const navigate = useNavigate();

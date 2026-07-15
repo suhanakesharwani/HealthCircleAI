@@ -158,12 +158,12 @@
 
 import { useEffect, useState } from "react";
 
-import { getCurrentUser } from "../api/auth";
+import { getCurrentUser } from "../../api/auth";
 
 import {
     getMemberships,
     updateMembershipRole,
-} from "../api/family";
+} from "../../api/family";
 
 function ManageMembersPage() {
 

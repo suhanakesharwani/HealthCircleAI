@@ -188,7 +188,7 @@ def process_report_ocr(report_id):
             structured.get("report_type")
         )
 
-        summary.model_version = "gemini-3.5-flash"
+        summary.model_version = "openai/gpt-oss-120b"
 
         summary.save()
 

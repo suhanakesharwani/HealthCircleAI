@@ -252,10 +252,10 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { getCurrentUser } from "../api/auth";
-import { getFamilyMembers } from "../api/member";
+import { getCurrentUser } from "../../api/auth";
+import { getFamilyMembers } from "../../api/member";
 
-import MemberCard from "../components/MemberCard";
+import MemberCard from "../../components/cards/MemberCard";
 
 function DashboardPage() {
 

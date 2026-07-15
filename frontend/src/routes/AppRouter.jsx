@@ -61,17 +61,17 @@
 
 import { Routes, Route } from "react-router-dom";
 
-import AuthLoadingPage from "../pages/AuthLoadingPage";
-import LoginPage from "../pages/LoginPage";
-import RegisterPage from "../pages/RegisterPage";
-import DashboardPage from "../pages/DashboardPage";
-import FamilySetupPage from "../pages/FamilySetupPage";
-import CompleteProfilePage from "../pages/CompleteProfilePage";
-import EditProfilePage from "../pages/EditProfilePage";
-import ManageMembersPage from "../pages/ManageMembersPage";
+import AuthLoadingPage from "../pages/Auth/AuthLoadingPage";
+import LoginPage from "../pages/Auth/LoginPage";
+import RegisterPage from "../pages/Auth/RegisterPage";
+import DashboardPage from "../pages/Dashboard/DashboardPage";
+import FamilySetupPage from "../pages/Family/FamilySetupPage";
+import CompleteProfilePage from "../pages/Auth/CompleteProfilePage";
+import EditProfilePage from "../pages/Settings/EditProfilePage";
+import ManageMembersPage from "../pages/Family/ManageMembersPage";
 import ProtectedRoute from "./ProtectedRoute";
-import FamilyMemberProfilePage from "../pages/FamilyMemberProfilePage"
-import EditFamilyMemberPage from "../pages/EditFamilyMemberPage";
+import FamilyMemberProfilePage from "../pages/Family/FamilyMemberProfilePage"
+import EditFamilyMemberPage from "../pages/Settings/EditFamilyMemberPage";
 
 function AppRouter() {
     return (

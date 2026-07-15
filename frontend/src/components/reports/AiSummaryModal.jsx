@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { getReportSummary } from "../api/report";
+import { getReportSummary } from "../../api/report";
 
 function AISummaryModal({ reportId, onClose }) {
 

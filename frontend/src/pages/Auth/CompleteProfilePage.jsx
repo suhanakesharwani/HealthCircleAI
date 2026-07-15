@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { getCurrentUser } from "../api/auth";
-import { createFamilyMember } from "../api/member";
+import { getCurrentUser } from "../../api/auth";
+import { createFamilyMember } from "../../api/member";
 
 function CompleteProfilePage() {
 

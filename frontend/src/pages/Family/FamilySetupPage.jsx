@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import {
     createFamily,
     joinFamily,
-} from "../api/family";
+} from "../../api/family";
 
 import { useState } from "react";
 

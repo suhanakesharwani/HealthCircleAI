@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { uploadReport } from "../api/report";
+import { uploadReport } from "../../api/report";
 
 function UploadReportModal({
 

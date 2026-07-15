@@ -30,7 +30,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-GEMINI_API_KEY=os.getenv("GEMINI_API_KEY")
+GROQ_API_KEY=os.getenv("GROQ_API_KEY")
 
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")

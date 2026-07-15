@@ -8,4 +8,39 @@ const axiosClient = axios.create({
     },
 });
 
+axiosClient.interceptors.response.use(
+    (response) => response,
+
+    async (error) => {
+
+        const originalRequest = error.config;
+
+        if (
+            error.response?.status === 401 &&
+            !originalRequest._retry &&
+            !originalRequest.url.includes("accounts/refresh/")
+        ) {
+
+            originalRequest._retry = true;
+
+            try {
+
+                await axiosClient.post("accounts/refresh/");
+
+                // Retry the original request
+                return axiosClient(originalRequest);
+
+            } catch (refreshError) {
+
+                // Refresh token also expired
+                window.location.href = "/login";
+
+                return Promise.reject(refreshError);
+            }
+        }
+
+        return Promise.reject(error);
+    }
+);
+
 export default axiosClient;

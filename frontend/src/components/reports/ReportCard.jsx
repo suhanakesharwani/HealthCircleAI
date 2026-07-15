@@ -3,7 +3,7 @@ import { useState } from "react";
 import {
     getPreviewUrl,
     deleteReport,
-} from "../api/report";
+} from "../../api/report";
 
 import AiSummaryModal from "./AiSummaryModal";
 

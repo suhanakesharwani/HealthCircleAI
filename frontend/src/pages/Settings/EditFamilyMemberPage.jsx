@@ -4,7 +4,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import {
     getFamilyMember,
     updateFamilyMember,
-} from "../api/member";
+} from "../../api/member";
 
 function EditFamilyMemberPage() {
 

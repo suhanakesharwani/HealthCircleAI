@@ -1,173 +1,32 @@
-# import json
-# import time
-
-# import google.generativeai as genai
-# from django.conf import settings
-
-
-# genai.configure(
-#     api_key=settings.GEMINI_API_KEY
-# )
-
-# model = genai.GenerativeModel(
-#     "gemini-3.5-flash"
-# )
-
-
-# class AIReportService:
-
-# #     def extract_structured_data(
-# #         self,
-        
-# #         ocr_text,
-# #     ):
-
-# #         prompt = f"""
-# # You are an expert medical laboratory report parser.
-
-# # The text below comes from OCR.
-# # It may contain spelling mistakes, formatting errors and broken tables.
-
-# # Your task is to reconstruct the report.
-
-# # Return ONLY valid JSON.
-
-# # Schema:
-
-# # {{
-# #     "patient": {{
-# #         "name": "",
-# #         "age": "",
-# #         "gender": ""
-# #     }},
-
-# #     "report_type": "",
-
-# #     "tests": [
-# #         {{
-# #             "name": "",
-# #             "value": "",
-# #             "unit": "",
-# #             "reference_range": "",
-# #             "status": "NORMAL/HIGH/LOW/BORDERLINE"
-# #         }}
-# #     ]
-# # }}
-
-# # OCR TEXT:
-
-# # {ocr_text}
-
-# # Remember:
-
-# # Return ONLY JSON.
-
-# # Do NOT explain anything.
-# # """
-
-# #         start = time.perf_counter()
-
-# #         response = model.generate_content(prompt)
-
-# #         print(f"Gemini API: {time.perf_counter() - start:.2f}s")
-
-# #         text = (
-# #             response.text
-# #             .replace("```json", "")
-# #             .replace("```", "")
-# #             .strip()
-# #         )
-
-# #         return json.loads(text)
-
-    
-#     def ai_analysis(
-#         self,
-        
-#         ocr_text,
-#     ):
-
-#         prompt = f"""
-#     You are an experienced physician and medical report interpreter.
-
-#     The following text comes from OCR and may contain formatting mistakes.
-
-#     Your tasks:
-
-#     1. Extract structured data.
-#     2. Explain the report in simple English.
-#     3. Identify abnormal values.
-#     4. Summarize the report in 3–5 sentences.
-#     5. Give general health recommendations.
-
-#     Never diagnose diseases.
-#     Never prescribe medication.
-#     Recommend consulting a healthcare professional when appropriate.
-
-#     Return ONLY valid JSON.
-
-#     {
-#         "summary": "...",
-
-#         "key_findings":[
-#             "...",
-#             "..."
-#         ],
-
-#         "abnormal_values":[
-#             {
-#                 "test":"",
-#                 "value":"",
-#                 "unit":"",
-#                 "reference_range":"",
-#                 "status":"HIGH"
-#             }
-#         ],
-
-#         "recommendations":[
-#             "...",
-#             "..."
-#         ],
-
-#         "structured_report":{
-#             ...
-#         }
-#     }
-# """
-
-#         start = time.perf_counter()
-
-#         response = model.generate_content(prompt)
-
-#         print(f"Gemini API: {time.perf_counter() - start:.2f}s")
-
-#         text = (
-#             response.text
-#             .replace("```json", "")
-#             .replace("```", "")
-#             .strip()
-#         )
-
-#         return json.loads(text)
 
 import json
 import time
 
-import google.generativeai as genai
+# import google.generativeai as genai
+from groq import Groq
 
 from django.conf import settings
 
 
 
-genai.configure(
-    api_key=settings.GEMINI_API_KEY
+# genai.configure(
+#     api_key=settings.GROQ_API_KEY
+# )
+
+
+# model = genai.GenerativeModel(
+#     "gemini-3.5-flash"
+# )
+
+# generation_config = genai.GenerationConfig(
+#     temperature=0,
+#     max_output_tokens=800
+# )
+
+
+client = Groq(
+    api_key=settings.GROQ_API_KEY
 )
-
-
-model = genai.GenerativeModel(
-    "gemini-3.5-flash"
-)
-
 
 
 class AIReportService:
@@ -293,21 +152,32 @@ OCR TEXT:
         start = time.perf_counter()
 
 
-        response = model.generate_content(
-            prompt
+        # response = model.generate_content(
+        #     prompt
+        # )
+
+        response = client.chat.completions.create(
+            model="openai/gpt-oss-20b",   # or another Groq model
+            messages=[
+                {
+                    "role": "user",
+                    "content": prompt,
+                }
+            ],
+            temperature=0,
+            response_format={"type":"json_object"},
+            max_completion_tokens=2500,
         )
-
-
-        print(
-            f"Gemini API: {time.perf_counter()-start:.2f}s"
-        )
-
 
         text = (
-            response.text
+            response.choices[0].message.content
             .replace("```json", "")
             .replace("```", "")
             .strip()
+        )
+
+        print(
+            f"GROQ API: {time.perf_counter()-start:.2f}s"
         )
 
 
