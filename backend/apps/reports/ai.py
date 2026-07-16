@@ -494,6 +494,8 @@ def _wait_for_tpm_budget(estimated_tokens):
 
 class AIReportService:
 
+    
+
     def analyze_report(self, ocr_text):
 
         prompt = f"""You are an expert medical report parser and interpreter.

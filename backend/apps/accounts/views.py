@@ -5,6 +5,9 @@ from rest_framework.permissions import AllowAny
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
+from django.conf import settings
+
+from apps.core.throttles import LoginRateThrottle,RegisterRateThrottle
 
 # Create your views here.
 from .serializers import(
@@ -15,6 +18,7 @@ from .serializers import(
 
 class RegisterView(APIView):
     permission_classes=[AllowAny]
+    throttle_classes = [RegisterRateThrottle]
     def post(self,request):
         serializer=RegisterSerializer(data=request.data)
 
@@ -34,16 +38,16 @@ class RegisterView(APIView):
             "access_token",
             access,
             httponly=True,
-            secure=False,
-            samesite="Lax"
+            secure=not settings.DEBUG,
+            samesite="Lax" if settings.DEBUG else "None",
         )
 
         response.set_cookie(
             "refresh_token",
             str(refresh),
             httponly=True,
-            secure=False,
-            samesite="Lax"
+            secure=not settings.DEBUG,
+            samesite="Lax" if settings.DEBUG else "None",
         )
 
         return response
@@ -52,6 +56,7 @@ class RegisterView(APIView):
 class LoginView(APIView):
 
     permission_classes = [AllowAny]
+    throttle_classes = [LoginRateThrottle]
 
     def post(self, request):
 
@@ -73,16 +78,16 @@ class LoginView(APIView):
             "access_token",
             access,
             httponly=True,
-            secure=False,
-            samesite="Lax"
+            secure=not settings.DEBUG,
+            samesite="Lax" if settings.DEBUG else "None",
         )
 
         response.set_cookie(
             "refresh_token",
             str(refresh),
             httponly=True,
-            secure=False,
-            samesite="Lax"
+            secure=not settings.DEBUG,
+             samesite="Lax" if settings.DEBUG else "None",
         )
 
         return response
@@ -106,8 +111,8 @@ class RefreshView(APIView):
             "access_token",
             access,
             httponly=True,
-            secure=False,
-            samesite="Lax"
+            secure=not settings.DEBUG,
+            samesite="Lax" if settings.DEBUG else "None",
         )
 
         return response
@@ -179,8 +184,8 @@ class RefreshView(APIView):
             "access_token",
             access,
             httponly=True,
-            secure=False,
-            samesite="Lax",
+            secure=not settings.DEBUG,
+            samesite="Lax" if settings.DEBUG else "None",
         )
 
         return response

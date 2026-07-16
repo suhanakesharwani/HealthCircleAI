@@ -38,10 +38,12 @@ from .trends import compare_reports
 from .history_analysis import analyze_history
 
 
-
+from apps.core.throttles import ReportUploadRateThrottle,AIRateThrottle
 class ReportListCreateView(APIView):
+    
 
     permission_classes = [IsAuthenticated]
+    throttle_classes = [ReportUploadRateThrottle]
 
     def get(self, request, member_id):
 
@@ -202,7 +204,9 @@ class ReportDetailView(APIView):
 
 class ReportSummaryView(APIView):
 
+
     permission_classes = [IsAuthenticated]
+    throttle_class=[AIRateThrottle]
 
     def get(self, request, report_id):
 
