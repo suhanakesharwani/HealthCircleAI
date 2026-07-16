@@ -72,16 +72,19 @@ import ManageMembersPage from "../pages/Family/ManageMembersPage";
 import ProtectedRoute from "./ProtectedRoute";
 import FamilyMemberProfilePage from "../pages/Family/FamilyMemberProfilePage"
 import EditFamilyMemberPage from "../pages/Settings/EditFamilyMemberPage";
-
+import LandingPage from "../pages/Auth/LandingPage"
 function AppRouter() {
     return (
         <Routes>
 
             <Route
                 path="/"
+                element={<LandingPage />}
+            />
+            <Route
+                path="/loading"
                 element={<AuthLoadingPage />}
             />
-
             <Route
                 path="/login"
                 element={<LoginPage />}

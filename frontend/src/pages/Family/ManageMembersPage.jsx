@@ -1,22 +1,20 @@
+
 // import { useEffect, useState } from "react";
 
-// import { getCurrentUser } from "../api/auth";
+// import { getCurrentUser } from "../../api/auth";
 
 // import {
 //     getMemberships,
 //     updateMembershipRole,
-// } from "../api/family";
+// } from "../../api/family";
 
 // function ManageMembersPage() {
 
 //     const [memberships, setMemberships] = useState([]);
-
 //     const [familyId, setFamilyId] = useState("");
 
 //     useEffect(() => {
-
 //         load();
-
 //     }, []);
 
 //     async function load() {
@@ -32,18 +30,48 @@
 //         setMemberships(data);
 //     }
 
-//     async function changeRole(
-//         membershipId,
-//         role
-//     ) {
+//     function changeRole(id, role) {
 
-//         await updateMembershipRole(
-//             familyId,
-//             membershipId,
-//             role
+//         setMemberships(prev =>
+//             prev.map(member =>
+//                 member.id === id
+//                     ? {
+//                           ...member,
+//                           role,
+//                       }
+//                     : member
+//             )
 //         );
 
-//         load();
+//     }
+
+//     async function saveChanges() {
+
+//         try {
+
+//             for (const member of memberships) {
+
+//                 if (member.role !== "OWNER") {
+
+//                     await updateMembershipRole(
+//                         familyId,
+//                         member.id,
+//                         member.role
+//                     );
+
+//                 }
+
+//             }
+
+//             alert("Roles updated successfully.");
+
+//         }
+
+//         catch {
+
+//             alert("Failed to update roles.");
+
+//         }
 
 //     }
 
@@ -56,15 +84,12 @@
 //             }}
 //         >
 
-//             <h1>
-
-//                 Manage Family Members
-
-//             </h1>
+//             <h1>Manage Family Members</h1>
 
 //             <table
 //                 style={{
 //                     width: "100%",
+//                     borderCollapse: "collapse",
 //                 }}
 //             >
 
@@ -90,22 +115,23 @@
 
 //                             <td>
 
-//                                 {member.user?.full_name || "Unknown"}
+//                                 {member.user.full_name}
 
 //                             </td>
 
 //                             <td>
 
-//                                 {member.user?.email || "-"}
+//                                 {member.user.email}
 
 //                             </td>
 
 //                             <td>
 
 //                                 {member.role === "OWNER"
+
 //                                     ?
 
-//                                     "OWNER"
+//                                     <b>OWNER</b>
 
 //                                     :
 
@@ -148,6 +174,20 @@
 
 //             </table>
 
+//             <div
+//                 style={{
+//                     marginTop: 30,
+//                 }}
+//             >
+
+//                 <button
+//                     onClick={saveChanges}
+//                 >
+//                     Save Changes
+//                 </button>
+
+//             </div>
+
 //         </div>
 
 //     );
@@ -155,200 +195,77 @@
 // }
 
 // export default ManageMembersPage;
-
 import { useEffect, useState } from "react";
 
 import { getCurrentUser } from "../../api/auth";
+import { getMemberships, updateMembershipRole } from "../../api/family";
 
-import {
-    getMemberships,
-    updateMembershipRole,
-} from "../../api/family";
+import "../../styles/family.css";
+import PageShell from "../../components/layout/PageShell";
+import BackLink from "../../components/ui/BackLink";
+import PrimaryButton from "../../components/ui/PrimaryButton";
+import MembershipTable from "../../components/family/MembershipTable";
 
-function ManageMembersPage() {
-
+export default function ManageMembersPage() {
     const [memberships, setMemberships] = useState([]);
     const [familyId, setFamilyId] = useState("");
+    const [saving, setSaving] = useState(false);
+    const [status, setStatus] = useState("");
 
     useEffect(() => {
         load();
     }, []);
 
     async function load() {
-
         const user = await getCurrentUser();
-
         setFamilyId(user.family.id);
 
-        const data = await getMemberships(
-            user.family.id
-        );
-
+        const data = await getMemberships(user.family.id);
         setMemberships(data);
     }
 
     function changeRole(id, role) {
-
-        setMemberships(prev =>
-            prev.map(member =>
-                member.id === id
-                    ? {
-                          ...member,
-                          role,
-                      }
-                    : member
-            )
+        setMemberships((prev) =>
+            prev.map((member) => (member.id === id ? { ...member, role } : member))
         );
-
+        setStatus("");
     }
 
     async function saveChanges() {
+        setSaving(true);
+        setStatus("");
 
         try {
-
             for (const member of memberships) {
-
                 if (member.role !== "OWNER") {
-
-                    await updateMembershipRole(
-                        familyId,
-                        member.id,
-                        member.role
-                    );
-
+                    await updateMembershipRole(familyId, member.id, member.role);
                 }
-
             }
-
-            alert("Roles updated successfully.");
-
+            setStatus("Roles updated successfully.");
+        } catch {
+            setStatus("Failed to update roles.");
+        } finally {
+            setSaving(false);
         }
-
-        catch {
-
-            alert("Failed to update roles.");
-
-        }
-
     }
 
     return (
+        <PageShell width="medium" isLoading={memberships.length === 0 && !familyId} loadingLabel="Loading family…">
+            <BackLink to="/dashboard">Dashboard</BackLink>
 
-        <div
-            style={{
-                width: 700,
-                margin: "40px auto",
-            }}
-        >
-
-            <h1>Manage Family Members</h1>
-
-            <table
-                style={{
-                    width: "100%",
-                    borderCollapse: "collapse",
-                }}
-            >
-
-                <thead>
-
-                    <tr>
-
-                        <th>Name</th>
-
-                        <th>Email</th>
-
-                        <th>Role</th>
-
-                    </tr>
-
-                </thead>
-
-                <tbody>
-
-                    {memberships.map(member => (
-
-                        <tr key={member.id}>
-
-                            <td>
-
-                                {member.user.full_name}
-
-                            </td>
-
-                            <td>
-
-                                {member.user.email}
-
-                            </td>
-
-                            <td>
-
-                                {member.role === "OWNER"
-
-                                    ?
-
-                                    <b>OWNER</b>
-
-                                    :
-
-                                    <select
-
-                                        value={member.role}
-
-                                        onChange={(e) =>
-                                            changeRole(
-                                                member.id,
-                                                e.target.value
-                                            )
-                                        }
-
-                                    >
-
-                                        <option value="MEMBER">
-
-                                            Member
-
-                                        </option>
-
-                                        <option value="CAREGIVER">
-
-                                            Caregiver
-
-                                        </option>
-
-                                    </select>
-
-                                }
-
-                            </td>
-
-                        </tr>
-
-                    ))}
-
-                </tbody>
-
-            </table>
-
-            <div
-                style={{
-                    marginTop: 30,
-                }}
-            >
-
-                <button
-                    onClick={saveChanges}
-                >
-                    Save Changes
-                </button>
-
+            <div className="hc-section-head" style={{ marginTop: 0 }}>
+                <h2>Manage family members</h2>
+                <p>Update roles for everyone in your HealthCircle.</p>
             </div>
 
-        </div>
+            <MembershipTable memberships={memberships} onRoleChange={changeRole} />
 
+            <div className="hc-save-bar">
+                {status && <span className="hc-save-status">{status}</span>}
+                <PrimaryButton onClick={saveChanges} disabled={saving}>
+                    {saving ? "Saving…" : "Save changes"}
+                </PrimaryButton>
+            </div>
+        </PageShell>
     );
-
 }
-
-export default ManageMembersPage;

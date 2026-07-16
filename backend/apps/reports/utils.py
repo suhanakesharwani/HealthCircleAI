@@ -89,3 +89,25 @@ def normalize_test_name(name):
     name = " ".join(name.split())
 
     return TEST_NAME_MAP.get(name, name)
+def chunk_text(text, chunk_size=8000, overlap=500):
+    """
+    Split OCR text into overlapping chunks.
+
+    overlap prevents splitting lab tables in half.
+    """
+
+    text = text.strip()
+
+    chunks = []
+    start = 0
+
+    while start < len(text):
+        end = start + chunk_size
+        chunks.append(text[start:end])
+
+        if end >= len(text):
+            break
+
+        start = end - overlap
+
+    return chunks

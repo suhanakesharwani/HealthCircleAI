@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../../api/auth";
 import { getCurrentUser } from "../../api/user";
+import "../../styles/loginandregister.css";
 
 function LoginPage() {
     const navigate = useNavigate();
@@ -29,19 +30,14 @@ function LoginPage() {
         setError("");
 
         try {
-           await login(formData);
+            await login(formData);
 
             const user = await getCurrentUser();
 
-            if(user.has_family){
-
+            if (user.has_family) {
                 navigate("/dashboard");
-
-            }
-            else{
-
+            } else {
                 navigate("/family/setup");
-
             }
         } catch (err) {
             console.log(err);
@@ -57,50 +53,65 @@ function LoginPage() {
     };
 
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "80px",
-            }}
-        >
-            <form
-                onSubmit={handleSubmit}
-                style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "15px",
-                    width: "350px",
-                }}
-            >
-                <h1>Login</h1>
+        <div className="auth-page">
+            <div className="hc-blob hc-blob-a" />
+            <div className="hc-blob hc-blob-b" />
+            <div className="hc-blob hc-blob-c" />
 
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                />
+            <div className="auth-card">
+                <span className="auth-eyebrow">Welcome Back</span>
+                <h1 className="auth-title">Log in</h1>
+                <p className="auth-subtitle">
+                    Pick up right where you and your family left off.
+                </p>
 
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <div className="auth-field">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            id="email"
+                            type="email"
+                            name="email"
+                            placeholder="saumya@example.com"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="auth-input"
+                            required
+                        />
+                    </div>
 
-                <button disabled={loading}>
-                    {loading ? "Logging in..." : "Login"}
-                </button>
+                    <div className="auth-field">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            placeholder="••••••••"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className="auth-input"
+                            required
+                        />
+                    </div>
 
-                {error && (
-                    <p style={{ color: "red" }}>{error}</p>
-                )}
-            </form>
+                    <button disabled={loading} className="auth-submit">
+                        {loading ? "Logging in..." : "Login"}
+                    </button>
+
+                    {error && <p className="auth-error">{error}</p>}
+                </form>
+
+                <div className="auth-switch-row">
+                    <p className="auth-switch-text">New to HealthCircle AI?</p>
+                    <button
+                        type="button"
+                        onClick={() => navigate("/register")}
+                        className="auth-switch-btn"
+                    >
+                        Register instead
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }

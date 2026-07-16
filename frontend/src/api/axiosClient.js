@@ -18,23 +18,15 @@ axiosClient.interceptors.response.use(
         if (
             error.response?.status === 401 &&
             !originalRequest._retry &&
-            !originalRequest.url.includes("accounts/refresh/")
+            !originalRequest.url.includes("auth/refresh/")   // was "accounts/refresh/"
         ) {
-
             originalRequest._retry = true;
 
             try {
-
-                await axiosClient.post("accounts/refresh/");
-
-                // Retry the original request
+                await axiosClient.post("auth/refresh/");     // was "accounts/refresh/"
                 return axiosClient(originalRequest);
-
             } catch (refreshError) {
-
-                // Refresh token also expired
                 window.location.href = "/login";
-
                 return Promise.reject(refreshError);
             }
         }

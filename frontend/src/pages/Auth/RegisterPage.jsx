@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { register } from "../../api/auth";
+import "../../styles/loginandregister.css";
 
 function RegisterPage() {
     const navigate = useNavigate();
@@ -51,61 +52,79 @@ function RegisterPage() {
     };
 
     return (
-        <div
-            style={{
-                display: "flex",
-                justifyContent: "center",
-                marginTop: "80px",
-            }}
-        >
-            <form
-                onSubmit={handleSubmit}
-                style={{
-                    width: "350px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "15px",
-                }}
-            >
-                <h1>Register</h1>
+        <div className="auth-page">
+            <div className="hc-blob hc-blob-a" />
+            <div className="hc-blob hc-blob-b" />
+            <div className="hc-blob hc-blob-c" />
 
-                <input
-                    type="text"
-                    name="full_name"
-                    placeholder="Full Name"
-                    value={formData.full_name}
-                    onChange={handleChange}
-                    required
-                />
+            <div className="auth-card">
+                <span className="auth-eyebrow">Get Started</span>
+                <h1 className="auth-title">Create your account</h1>
+                <p className="auth-subtitle">
+                    Join HealthCircle AI to start tracking your family's health together.
+                </p>
 
-                <input
-                    type="email"
-                    name="email"
-                    placeholder="Email"
-                    value={formData.email}
-                    onChange={handleChange}
-                    required
-                />
+                <form onSubmit={handleSubmit} className="auth-form">
+                    <div className="auth-field">
+                        <label htmlFor="full_name">Full Name</label>
+                        <input
+                            id="full_name"
+                            type="text"
+                            name="full_name"
+                            placeholder="Saumya Sharma"
+                            value={formData.full_name}
+                            onChange={handleChange}
+                            className="auth-input"
+                            required
+                        />
+                    </div>
 
-                <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    value={formData.password}
-                    onChange={handleChange}
-                    required
-                />
+                    <div className="auth-field">
+                        <label htmlFor="email">Email</label>
+                        <input
+                            id="email"
+                            type="email"
+                            name="email"
+                            placeholder="saumya@example.com"
+                            value={formData.email}
+                            onChange={handleChange}
+                            className="auth-input"
+                            required
+                        />
+                    </div>
 
-                <button disabled={loading}>
-                    {loading ? "Registering..." : "Register"}
-                </button>
+                    <div className="auth-field">
+                        <label htmlFor="password">Password</label>
+                        <input
+                            id="password"
+                            type="password"
+                            name="password"
+                            placeholder="••••••••"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className="auth-input"
+                            required
+                        />
+                    </div>
 
-                {error && (
-                    <p style={{ color: "red" }}>
-                        {error}
-                    </p>
-                )}
-            </form>
+                    <button disabled={loading} className="auth-submit">
+                        {loading ? "Registering..." : "Register"}
+                    </button>
+
+                    {error && <p className="auth-error">{error}</p>}
+                </form>
+
+                <div className="auth-switch-row">
+                    <p className="auth-switch-text">Already have an account?</p>
+                    <button
+                        type="button"
+                        onClick={() => navigate("/login")}
+                        className="auth-switch-btn"
+                    >
+                        Login instead
+                    </button>
+                </div>
+            </div>
         </div>
     );
 }
