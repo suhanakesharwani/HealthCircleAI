@@ -119,9 +119,7 @@ export default function LandingPage() {
         <h1 className="lp-heading">See tomorrow's health risks, today.</h1>
 
         <p className="lp-sub">
-          HealthCircle AI reads the quiet signals your body sends every day
-          and turns them into early warnings — giving you and your doctor the
-          lead time that real prevention needs.
+          HealthCircle AI keeps your family's medical reports, medicines, habits, and AI health summaries in one secure place, so you can care for loved ones even from miles away.
         </p>
 
         {/* EMAIL CAPTURE */}

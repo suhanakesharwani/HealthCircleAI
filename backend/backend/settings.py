@@ -130,7 +130,13 @@ DATABASES = {
 REST_FRAMEWORK={
     "DEFAULT_AUTHENTICATION_CLASSES":(
         "apps.accounts.authentication.CookieJWTAuthentication",
-    )
+    ),
+    "DEFAULT_THROTTLE_CLASSES": [
+        "rest_framework.throttling.UserRateThrottle",
+    ],
+    "DEFAULT_THROTTLE_RATES": {
+        "user": "1000/day",
+    },
 }
 
 from datetime import timedelta
