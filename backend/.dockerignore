@@ -4,8 +4,8 @@ __pycache__/
 *.pyd
 
 .env
-.env.dev
-.env.prod
+.env.*
+!.env.example
 
 venv/
 .venv/
@@ -13,11 +13,13 @@ venv/
 .git
 .gitignore
 
+node_modules/
+
 media/
 staticfiles/
 
 .pytest_cache/
 .mypy_cache/
 
-.idea/
-.vscode/
+Dockerfile
+docker-compose.yml
